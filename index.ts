@@ -1,0 +1,345 @@
+/**
+ * Command Code provider (https://commandcode.ai/docs/provider)
+ *
+ * OpenAI-compatible Chat Completions API:
+ *   baseUrl: https://api.commandcode.ai/provider/v1
+ *   auth:    Bearer <key>  (stored via `/login command-code`, or $CMD_CODE_API_KEY)
+ *
+ * Model roster is static — canonical ids from
+ *   GET https://api.commandcode.ai/provider/v1/models
+ * with context windows from the models endpoint and per-1M-token USD prices
+ * from https://commandcode.ai/models (open-weight Go-plan models plus the
+ * premium models available on every plan: GPT-5.6 Luna, Grok 4.5).
+ *
+ * The gateway proxies to many upstreams, so request fields stay conservative:
+ * `max_tokens` instead of `max_completion_tokens`, and no `reasoning_effort`.
+ */
+
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import {
+	costFor,
+	DEEPSEEK_PRICING,
+	deepseekRates,
+} from "./pricing.ts";
+
+const BASE_URL = "https://api.commandcode.ai/provider/v1";
+
+const ZERO_CACHE_WRITE = 0;
+const c = (input: number, output: number, cacheRead: number, cacheWrite = ZERO_CACHE_WRITE) => ({
+	input,
+	output,
+	cacheRead,
+	cacheWrite,
+});
+
+// Common compat: send max_tokens (deprecated-but-universal OpenAI field),
+// skip reasoning_effort to avoid 400s on strict upstreams.
+const COMPAT = { maxTokensField: "max_tokens", supportsReasoningEffort: false } as const;
+
+// DeepSeek models accept the DeepSeek thinking controls (like Hetzner):
+// thinking: {type: "enabled"} + reasoning_effort. Map enables max level.
+const DEEPSEEK_THINKING = {
+	off: "disabled",
+	minimal: "low",
+	low: "low",
+	medium: "medium",
+	high: "high",
+	xhigh: "max",
+	max: "max",
+} as const;
+
+const DEEPSEEK_COMPAT = {
+	thinkingFormat: "deepseek",
+	maxTokensField: "max_tokens",
+	supportsReasoningEffort: true,
+	requiresReasoningContentOnAssistantMessages: true,
+} as const;
+
+// Other open-weight families (GLM/Qwen/Kimi/MiniMax/MiMo/Inkling) and
+// OpenAI-format premium models cap effort at "high"; the gateway accepts
+// reasoning_effort (probed: qwen/deepseek effort actually changes reasoning
+// depth) but has no "max" tier. Exposes all pi levels without inventing
+// upstream values.
+const THINKING = {
+	off: "disabled",
+	minimal: "low",
+	low: "low",
+	medium: "medium",
+	high: "high",
+	xhigh: "high",
+	max: "high",
+} as const;
+
+// GLM upstream speaks the zai thinking contract (thinking: {type} + reasoning_effort).
+const ZAI_COMPAT = {
+	thinkingFormat: "zai",
+	maxTokensField: "max_tokens",
+	supportsReasoningEffort: true,
+} as const;
+
+// Qwen upstream reads enable_thinking + reasoning_effort.
+const QWEN_COMPAT = {
+	thinkingFormat: "qwen",
+	maxTokensField: "max_tokens",
+	supportsReasoningEffort: true,
+} as const;
+
+// OpenAI-schema reasoning_effort (low/medium/high) for the rest.
+const REASONING_COMPAT = {
+	maxTokensField: "max_tokens",
+	supportsReasoningEffort: true,
+} as const;
+
+export default function (pi: ExtensionAPI) {
+	pi.registerProvider("command-code", {
+		name: "Command Code",
+		baseUrl: BASE_URL,
+		apiKey: "$CMD_CODE_API_KEY",
+		api: "openai-completions",
+		models: [
+			// DeepSeek
+			// DeepSeek — time-of-day pricing (docs: commandcode.ai/models/deepseek-v4-{flash,pro}):
+			//   Off-peak (17h/day): flash $0.22/$0.66/$0.007, pro $0.66/$1.98/$0.02
+			//   Peak (7h/day, 01–04 & 06–10 UTC): flash $0.44/$1.32/$0.01, pro $1.32/$3.96/$0.04
+			// pi supports only flat rates, so off-peak (the page headline rate) is used;
+			// during peak hours actual cost runs ~2x. Pro page also had a −75% deal
+			// (ends 2026-08-16) baked into these numbers.
+			{
+				id: "deepseek/deepseek-v4-flash",
+				name: "DeepSeek V4 Flash",
+				reasoning: true,
+				input: ["text"],
+				cost: c(0.22, 0.66, 0.007),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: DEEPSEEK_THINKING,
+				compat: DEEPSEEK_COMPAT,
+			},
+			{
+				id: "deepseek/deepseek-v4-pro",
+				name: "DeepSeek V4 Pro",
+				reasoning: true,
+				input: ["text"],
+				cost: c(0.66, 1.98, 0.02),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: DEEPSEEK_THINKING,
+				compat: DEEPSEEK_COMPAT,
+			},
+			// Moonshot Kimi
+			{
+				id: "moonshotai/Kimi-K3",
+				name: "Kimi K3",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(3.0, 15.0, 0.3),
+				contextWindow: 1_000_000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "moonshotai/Kimi-K2.7-Code",
+				name: "Kimi K2.7 Code",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.95, 4.0, 0.19),
+				contextWindow: 256000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "moonshotai/Kimi-K2.7-Code-Highspeed",
+				name: "Kimi K2.7 Code HighSpeed",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(1.9, 8.0, 0.38),
+				contextWindow: 262000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "moonshotai/Kimi-K2.6",
+				name: "Kimi K2.6",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.95, 4.0, 0.16),
+				contextWindow: 256000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "moonshotai/Kimi-K2.5",
+				name: "Kimi K2.5",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.6, 3.0, 0.1),
+				contextWindow: 256000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			// Zhipu GLM
+			{
+				id: "zai-org/GLM-5.3",
+				name: "GLM 5.3",
+				reasoning: true,
+				input: ["text"],
+				cost: c(1.4, 4.4, 0.26),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: ZAI_COMPAT,
+			},
+			{
+				id: "zai-org/GLM-5.2",
+				name: "GLM 5.2",
+				reasoning: true,
+				input: ["text"],
+				cost: c(1.4, 4.4, 0.26),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: ZAI_COMPAT,
+			},
+			{
+				id: "zai-org/GLM-5.2-Fast",
+				name: "GLM 5.2 Fast",
+				reasoning: false,
+				input: ["text"],
+				cost: c(3.0, 10.25, 0.5),
+				contextWindow: 1_000_000,
+				maxTokens: 65536,
+				compat: COMPAT,
+			},
+			// MiniMax
+			{
+				id: "MiniMaxAI/MiniMax-M3",
+				name: "MiniMax M3",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.3, 1.2, 0.06),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			// Qwen
+			{
+				id: "Qwen/Qwen3.7-Max",
+				name: "Qwen 3.7 Max",
+				reasoning: true,
+				input: ["text"],
+				cost: c(2.5, 7.5, 0.5, 3.13),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			{
+				id: "Qwen/Qwen3.7-Plus",
+				name: "Qwen 3.7 Plus",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.4, 1.6, 0.08, 0.5),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			{
+				id: "Qwen/Qwen3.7-Flash",
+				name: "Qwen 3.7 Flash",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.03, 0.13, 0.006, 0.038),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			{
+				id: "Qwen/Qwen3.6-Plus",
+				name: "Qwen 3.6 Plus",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.5, 3.0, 0.1),
+				contextWindow: 200000,
+				maxTokens: 32768,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			// Xiaomi MiMo
+			{
+				id: "xiaomi/mimo-v2.5-pro",
+				name: "MiMo V2.5 Pro",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.435, 0.87, 0.0036),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			// Thinking Machines
+			{
+				id: "thinkingmachines/inkling",
+				name: "Inkling",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(1.0, 4.05, 0.17),
+				contextWindow: 256000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			// Premium, available on every plan per https://commandcode.ai/docs/plans/go
+			{
+				id: "gpt-5.6-luna",
+				name: "GPT-5.6 Luna",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.2, 1.2, 0.02, 0.25),
+				contextWindow: 1_050_000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "xai/grok-4.5",
+				name: "Grok 4.5",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(2.0, 6.0, 0.5),
+				contextWindow: 500000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+		],
+	});
+
+	// Recompute DeepSeek cost with the rate band for the current UTC hour.
+	// Runs at message end so peak/off-peak switches mid-session stay accurate.
+	pi.on("message_end", (event) => {
+		const message = event.message;
+		if (message.role !== "assistant") return;
+		if (message.provider !== "command-code") return;
+		const rates = DEEPSEEK_PRICING[message.model];
+		if (!rates) return;
+		const usage = message.usage;
+		if (!usage || usage.totalTokens === 0) return;
+		return {
+			message: {
+				...message,
+				usage: {
+					...usage,
+					cost: costFor(deepseekRates(message.model), usage),
+				},
+			},
+		};
+	});
+}
