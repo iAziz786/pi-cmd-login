@@ -532,7 +532,24 @@ export default function (pi: ExtensionAPI) {
 				thinkingLevelMap: THINKING,
 				compat: REASONING_COMPAT,
 			},
-			// --- Tencent ---
+			// --- Stealth ---
+		// Ox Alpha — stealth long-horizon coding model. Promo: every request
+		// billed $0.00 (input/output/cache read) while the deal runs
+		// (https://commandcode.ai/models/ox-alpha). Unknown upstream; exposes
+		// all pi thinking levels via reasoning_effort, capped at "high"
+		// (gateway has no higher tier).
+		{
+			id: "stealth/ox-alpha",
+			name: "Ox Alpha",
+			reasoning: true,
+			input: ["text", "image"],
+			cost: c(0, 0, 0),
+			contextWindow: 1_048_576,
+			maxTokens: 65536,
+			thinkingLevelMap: THINKING,
+			compat: REASONING_COMPAT,
+		},
+		// --- Tencent ---
 			{
 				id: "tencent/hy3-paid",
 				name: "Tencent Hy3",
@@ -674,6 +691,17 @@ export default function (pi: ExtensionAPI) {
 				cost: c(2, 6, 0.25),
 				contextWindow: 1_000_000,
 				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			{
+				id: "Qwen/Qwen3.8-27B",
+				name: "Qwen 3.8 27B",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.4, 3, 0.04),
+				contextWindow: 262_144,
+				maxTokens: 65536,
 				thinkingLevelMap: THINKING,
 				compat: QWEN_COMPAT,
 			},
