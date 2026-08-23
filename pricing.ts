@@ -4,9 +4,23 @@
  * Rates from https://commandcode.ai/models/deepseek-v4-flash and
  * https://commandcode.ai/models/deepseek-v4-pro. Peak bands (UTC):
  * 01:00–04:00 and 06:00–10:00, 7h/day; off-peak is the other 17h.
+ *
+ * Billing rules changed 2026-08-23 00:00 Beijing time (= 2026-08-22 16:00 UTC):
+ * weekends (Sat/Sun, Beijing time) are charged at the off-peak rate all day;
+ * weekdays keep the peak/off-peak bands. Fees before the effective time are
+ * settled under the old rules (no weekend discount).
  */
 
 export type Rates = { input: number; output: number; cacheRead: number };
+
+// 2026-08-23 00:00 Beijing time, when the weekend billing rules took effect.
+const WEEKEND_RULES_START = Date.UTC(2026, 7, 22, 16);
+
+// Beijing is UTC+8; shifting the instant and reading the UTC weekday yields
+// the weekday as it is in Beijing.
+function beijingWeekday(date: Date): number {
+	return new Date(date.getTime() + 8 * 3_600_000).getUTCDay();
+}
 
 export const DEEPSEEK_PRICING: Record<string, { offPeak: Rates; peak: Rates }> = {
 	"deepseek/deepseek-v4-flash": {
@@ -20,6 +34,11 @@ export const DEEPSEEK_PRICING: Record<string, { offPeak: Rates; peak: Rates }> =
 };
 
 export function isDeepSeekPeakHours(date = new Date()): boolean {
+	// From 2026-08-23 00:00 Beijing, weekends are off-peak all day.
+	if (date.getTime() >= WEEKEND_RULES_START) {
+		const weekday = beijingWeekday(date);
+		if (weekday === 0 || weekday === 6) return false;
+	}
 	const hour = date.getUTCHours();
 	return (hour >= 1 && hour < 4) || (hour >= 6 && hour < 10);
 }
