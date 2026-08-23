@@ -6,6 +6,10 @@ import {
 	isDeepSeekPeakHours,
 } from "./pricing.ts";
 
+// New billing rules effective 2026-08-23 00:00 Beijing time (= 2026-08-22 16:00 UTC):
+// weekends (Sat/Sun, Beijing time) are charged at the off-peak rate all day.
+// Weekdays keep the existing peak/off-peak tiers.
+
 describe("isDeepSeekPeakHours", () => {
 	test("peak: 01:00–03:59 UTC", () => {
 		expect(isDeepSeekPeakHours(new Date("2026-08-01T01:00:00Z"))).toBe(true);
@@ -57,6 +61,46 @@ describe("deepseekRates", () => {
 			output: 0,
 			cacheRead: 0,
 		});
+	});
+});
+
+describe("weekend billing (rules effective 2026-08-23 00:00 Beijing)", () => {
+	test("Sunday 10:00 Beijing (peak UTC hour) is off-peak all day", () => {
+		// 2026-08-23 02:00 UTC = 2026-08-23 10:00 Sunday Beijing — peak band, but weekend
+		expect(deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-23T02:00:00Z"))).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].offPeak,
+		);
+		expect(deepseekRates("deepseek/deepseek-v4-pro", new Date("2026-08-23T02:00:00Z"))).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-pro"].offPeak,
+		);
+	});
+
+	test("Saturday 15:00 Beijing (peak UTC hour) is off-peak all day", () => {
+		// 2026-08-29 07:00 UTC = 2026-08-29 15:00 Saturday Beijing — peak band, but weekend
+		expect(deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-29T07:00:00Z"))).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].offPeak,
+		);
+	});
+
+	test("weekday 10:00 Beijing (peak UTC hour) stays peak", () => {
+		// 2026-08-24 02:00 UTC = 2026-08-24 10:00 Monday Beijing — peak band, weekday
+		expect(deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-24T02:00:00Z"))).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].peak,
+		);
+	});
+
+	test("old rules apply before 2026-08-23 00:00 Beijing (Saturday 2026-08-22 10:00)", () => {
+		// 2026-08-22 02:00 UTC = 2026-08-22 10:00 Saturday Beijing — before the new rules
+		expect(deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-22T02:00:00Z"))).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].peak,
+		);
+	});
+
+	test("isDeepSeekPeakHours is false for any weekend hour (Beijing)", () => {
+		// Sunday 2026-08-23 10:00 Beijing (02:00 UTC): peak band, but weekend
+		expect(isDeepSeekPeakHours(new Date("2026-08-23T02:00:00Z"))).toBe(false);
+		// Saturday 2026-08-29 15:00 Beijing (07:00 UTC): peak band, but weekend
+		expect(isDeepSeekPeakHours(new Date("2026-08-29T07:00:00Z"))).toBe(false);
 	});
 });
 

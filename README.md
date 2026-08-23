@@ -37,6 +37,8 @@ DeepSeek V4 Flash/Pro bill at different rates depending on UTC hour:
 | Off-peak | 17h/day | 0.22 / 0.66 / 0.007 | 0.66 / 1.98 / 0.02 |
 | Peak | 7h/day · 01–04 & 06–10 | 0.44 / 1.32 / 0.01 | 1.32 / 3.96 / 0.04 |
 
+Since 2026-08-23 00:00 Beijing time, weekends (Sat/Sun, Beijing time) are charged at the off-peak rate all day; weekdays keep the peak/off-peak bands above. Calls before that date are settled under the old rules.
+
 pi models carry a flat `cost`, so the extension recomputes DeepSeek cost in a `message_end` hook using the rate band for the current UTC hour. Logic lives in `pricing.ts` (unit-tested).
 
 ## Test
