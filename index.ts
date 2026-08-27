@@ -138,6 +138,20 @@ export default function (pi: ExtensionAPI) {
 				thinkingLevelMap: DEEPSEEK_THINKING,
 				compat: DEEPSEEK_COMPAT,
 			},
+			{
+				id: "deepseek/deepseek-v4-flash-vision-exp",
+				name: "DeepSeek V4 Flash Vision (exp)",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0.22, 0.66, 0.007),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: DEEPSEEK_THINKING,
+				compat: DEEPSEEK_COMPAT,
+			},
 			// --- Anthropic Claude ---
 			{
 				id: "claude-fable-5",
@@ -397,6 +411,34 @@ export default function (pi: ExtensionAPI) {
 				compat: REASONING_COMPAT,
 			},
 			{
+				id: "minimax/minimax-m3-free",
+				name: "MiniMax M3 (free)",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0, 0, 0),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "minimax/minimax-m2.7-free",
+				name: "MiniMax M2.7 (free)",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0, 0, 0),
+				contextWindow: 197_000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
 				id: "MiniMaxAI/MiniMax-M2.7",
 				name: "MiniMax M2.7",
 				reasoning: true,
@@ -532,23 +574,6 @@ export default function (pi: ExtensionAPI) {
 				thinkingLevelMap: THINKING,
 				compat: REASONING_COMPAT,
 			},
-			// --- Stealth ---
-		// Ox Alpha — stealth long-horizon coding model. Promo: every request
-		// billed $0.00 (input/output/cache read) while the deal runs
-		// (https://commandcode.ai/models/ox-alpha). Unknown upstream; exposes
-		// all pi thinking levels via reasoning_effort, capped at "high"
-		// (gateway has no higher tier).
-		{
-			id: "stealth/ox-alpha",
-			name: "Ox Alpha",
-			reasoning: true,
-			input: ["text", "image"],
-			cost: c(0, 0, 0),
-			contextWindow: 1_048_576,
-			maxTokens: 65536,
-			thinkingLevelMap: THINKING,
-			compat: REASONING_COMPAT,
-		},
 		// --- Tencent ---
 			{
 				id: "tencent/hy3-paid",
@@ -642,6 +667,19 @@ export default function (pi: ExtensionAPI) {
 				compat: ZAI_COMPAT,
 			},
 			{
+				id: "z-ai/glm-5.3-flash",
+				name: "GLM 5.3 Flash",
+				reasoning: true,
+				input: [
+					"text"
+				],
+				cost: c(1.4, 4.4, 0.26),
+				contextWindow: 1_048_576,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: ZAI_COMPAT,
+			},
+			{
 				id: "zai-org/GLM-5.2",
 				name: "GLM 5.2",
 				reasoning: true,
@@ -702,6 +740,20 @@ export default function (pi: ExtensionAPI) {
 				cost: c(0.4, 3, 0.04),
 				contextWindow: 262_144,
 				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
+			{
+				id: "Qwen/Qwen3.8-Flash",
+				name: "Qwen 3.8 Flash",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0.03, 0.13, 0.006, 0.038),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
 				thinkingLevelMap: THINKING,
 				compat: QWEN_COMPAT,
 			},
