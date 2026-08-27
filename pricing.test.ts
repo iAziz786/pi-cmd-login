@@ -104,6 +104,26 @@ describe("weekend billing (rules effective 2026-08-23 00:00 Beijing)", () => {
 	});
 });
 
+describe("deepseek-v4-flash-vision-exp pricing", () => {
+	test("shares flash peak/off-peak bands", () => {
+		expect(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"]).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"],
+		);
+	});
+
+	test("weekday peak UTC hour bills peak", () => {
+		expect(
+			deepseekRates("deepseek/deepseek-v4-flash-vision-exp", new Date("2026-08-24T02:00:00Z")),
+		).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"].peak);
+	});
+
+	test("weekend peak UTC hour bills off-peak (new rules)", () => {
+		expect(
+			deepseekRates("deepseek/deepseek-v4-flash-vision-exp", new Date("2026-08-29T07:00:00Z")),
+		).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"].offPeak);
+	});
+});
+
 describe("costFor", () => {
 	test("off-peak flash: 500k in, 100k out, 400k cacheRead", () => {
 		const cost = costFor(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].offPeak, {
