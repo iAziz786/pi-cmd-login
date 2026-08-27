@@ -27,6 +27,10 @@ export const DEEPSEEK_PRICING: Record<string, { offPeak: Rates; peak: Rates }> =
 		offPeak: { input: 0.22, output: 0.66, cacheRead: 0.007 },
 		peak: { input: 0.44, output: 1.32, cacheRead: 0.01 },
 	},
+	"deepseek/deepseek-v4-flash-vision-exp": {
+		offPeak: { input: 0.22, output: 0.66, cacheRead: 0.007 },
+		peak: { input: 0.44, output: 1.32, cacheRead: 0.01 },
+	},
 	"deepseek/deepseek-v4-pro": {
 		offPeak: { input: 0.66, output: 1.98, cacheRead: 0.02 },
 		peak: { input: 1.32, output: 3.96, cacheRead: 0.04 },

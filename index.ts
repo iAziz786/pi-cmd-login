@@ -673,8 +673,8 @@ export default function (pi: ExtensionAPI) {
 				input: [
 					"text"
 				],
-				cost: c(1.4, 4.4, 0.26),
-				contextWindow: 1_048_576,
+				cost: c(0.15, 0.50, 0.03),
+				contextWindow: 1_050_000,
 				maxTokens: 131072,
 				thinkingLevelMap: THINKING,
 				compat: ZAI_COMPAT,
@@ -751,7 +751,7 @@ export default function (pi: ExtensionAPI) {
 					"text",
 					"image"
 				],
-				cost: c(0.03, 0.13, 0.006, 0.038),
+				cost: c(0.16, 0.47, 0.02),
 				contextWindow: 1_000_000,
 				maxTokens: 131072,
 				thinkingLevelMap: THINKING,
