@@ -21,6 +21,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Model | ID |
 |---|---|
 | Claude Fable 5 | `claude-fable-5` |
+| Claude Fable 5.1 | `claude-fable-5-1` |
 | Claude Haiku 4.5 | `claude-haiku-4-5-20251001` |
 | Claude Opus 4.7 | `claude-opus-4-7` |
 | Claude Opus 4.8 | `claude-opus-4-8` |
@@ -28,6 +29,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Claude Sonnet 4.6 | `claude-sonnet-4-6` |
 | Claude Sonnet 5 | `claude-sonnet-5` |
 | DeepSeek V4 Flash (latest) | `deepseek/deepseek-v4-flash` |
+| DeepSeek V4 Flash Fast | `deepseek/deepseek-v4-flash-fast` |
 | DeepSeek V4 Flash Vision (exp) | `deepseek/deepseek-v4-flash-vision-exp` |
 | DeepSeek V4 Pro (latest) | `deepseek/deepseek-v4-pro` |
 | Fugu Ultra | `sakana/fugu-ultra` |
@@ -62,9 +64,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | MiMo V2.5 | `xiaomi/mimo-v2.5` |
 | MiMo V2.5 Pro | `xiaomi/mimo-v2.5-pro` |
 | MiniMax M2.5 | `MiniMaxAI/MiniMax-M2.5` |
-| MiniMax M2.7 | `minimax/minimax-m2.7-free` |
 | MiniMax M2.7 | `MiniMaxAI/MiniMax-M2.7` |
-| MiniMax M3 | `minimax/minimax-m3-free` |
 | MiniMax M3 | `MiniMaxAI/MiniMax-M3` |
 | Muse Spark 1.1 | `meta/muse-spark-1.1` |
 | Muse Spark 1.2 | `meta/muse-spark-1.2` |
@@ -81,6 +81,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Step 3.5 Flash | `stepfun/Step-3.5-Flash` |
 | Step 3.7 Flash | `stepfun/Step-3.7-Flash` |
 | Tencent Hy3 | `tencent/hy3-paid` |
+| Tencent Hy4 Preview | `tencent/hy4-preview` |
 
 Per-1M-token USD costs are baked in from https://commandcode.ai/models.
 

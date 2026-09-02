@@ -152,6 +152,20 @@ export default function (pi: ExtensionAPI) {
 				thinkingLevelMap: DEEPSEEK_THINKING,
 				compat: DEEPSEEK_COMPAT,
 			},
+			{
+				id: "deepseek/deepseek-v4-flash-fast",
+				name: "DeepSeek V4 Flash Fast",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0.28, 0.56, 0.07),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: DEEPSEEK_THINKING,
+				compat: DEEPSEEK_COMPAT,
+			},
 			// --- Anthropic Claude ---
 			{
 				id: "claude-fable-5",
@@ -159,6 +173,17 @@ export default function (pi: ExtensionAPI) {
 				reasoning: true,
 				input: ["text", "image"],
 				cost: c(10, 50, 1),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: ANTHROPIC_COMPAT,
+			},
+			{
+				id: "claude-fable-5-1",
+				name: "Claude Fable 5.1",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(10, 50, 0.25),
 				contextWindow: 1_000_000,
 				maxTokens: 131072,
 				thinkingLevelMap: THINKING,
@@ -411,34 +436,6 @@ export default function (pi: ExtensionAPI) {
 				compat: REASONING_COMPAT,
 			},
 			{
-				id: "minimax/minimax-m3-free",
-				name: "MiniMax M3 (free)",
-				reasoning: true,
-				input: [
-					"text",
-					"image"
-				],
-				cost: c(0, 0, 0),
-				contextWindow: 1_000_000,
-				maxTokens: 131072,
-				thinkingLevelMap: THINKING,
-				compat: REASONING_COMPAT,
-			},
-			{
-				id: "minimax/minimax-m2.7-free",
-				name: "MiniMax M2.7 (free)",
-				reasoning: true,
-				input: [
-					"text",
-					"image"
-				],
-				cost: c(0, 0, 0),
-				contextWindow: 197_000,
-				maxTokens: 65536,
-				thinkingLevelMap: THINKING,
-				compat: REASONING_COMPAT,
-			},
-			{
 				id: "MiniMaxAI/MiniMax-M2.7",
 				name: "MiniMax M2.7",
 				reasoning: true,
@@ -582,6 +579,17 @@ export default function (pi: ExtensionAPI) {
 				input: ["text"],
 				cost: c(0.14, 0.58, 0.04),
 				contextWindow: 262144,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "tencent/hy4-preview",
+				name: "Tencent Hy4 Preview",
+				reasoning: true,
+				input: ["text"],
+				cost: c(0.834, 2.501, 0.042),
+				contextWindow: 1_048_576,
 				maxTokens: 65536,
 				thinkingLevelMap: THINKING,
 				compat: REASONING_COMPAT,
