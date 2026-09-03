@@ -16,6 +16,8 @@ Then authenticate (prompts for your key, stores it in `~/.pi/agent/auth.json`):
 /login command-code
 ```
 
+Permissions: outbound HTTPS to `api.commandcode.ai` only. No filesystem or subprocess access. Key stored by pi in `~/.pi/agent/auth.json`.
+
 ## Models
 
 Static roster of Command Code models (canonical ids from `GET /provider/v1/models`):
