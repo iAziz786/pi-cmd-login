@@ -18,7 +18,8 @@ The `index.ts` roster must match the live Command Code catalog. Run this wheneve
 3. Add missing models and remove the blocks of models no longer listed. The API carries no rates — take `cost` from https://commandcode.ai/models (master table: input/output/cache-read $/M, deal annotations) or the per-model page `commandcode.ai/models/<slug>`.
 4. DeepSeek models with a "peak hours" section bill by time of day: put their peak/off-peak rates in `DEEPSEEK_PRICING` in `pricing.ts` — the `message_end` cost recompute keys off that table, not the flat `cost`. Models without peak hours are flat-rate and stay out.
 5. Regenerate the model table in `README.md` from the fetched catalog.
-6. Re-run the diff (zero missing, zero extra) before committing.
+6. Update `catalog.yaml` — the deterministic source of truth for pricing (each entry has `cost`, `contextWindow`, and `source` link). Either run `bun run sync:catalog` to refetch live pricing, or edit `catalog.yaml` by hand; `catalog.test.ts` fails if `index.ts`/`pricing.ts` drift from it, so wrong pricing cannot ship.
+7. Re-run the diff (zero missing, zero extra) and `bun test` before committing.
 
 ## Release
 
