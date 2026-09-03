@@ -5,6 +5,8 @@
 ## Install
 
 ```bash
+pi install npm:@iaziz786/pi-cmd-login
+# or from git:
 pi install git:github.com/iAziz786/pi-cmd-login
 ```
 
