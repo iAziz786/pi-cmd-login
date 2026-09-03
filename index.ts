@@ -257,6 +257,17 @@ export default function (pi: ExtensionAPI) {
 			},
 			// --- Google Gemini ---
 			{
+				id: "google/gemini-3.8-flash",
+				name: "Gemini 3.8 Flash",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(1.5, 7.5, 0.15),
+				contextWindow: 1_000_000,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: GEMINI_COMPAT,
+			},
+			{
 				id: "google/gemini-3.7-flash",
 				name: "Gemini 3.7 Flash",
 				reasoning: true,
@@ -413,6 +424,28 @@ export default function (pi: ExtensionAPI) {
 				compat: REASONING_COMPAT,
 			},
 			{
+				id: "meta/muse-spark-1.3",
+				name: "Muse Spark 1.3",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(1.25, 4.25, 0.15),
+				contextWindow: 1_048_576,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
+				id: "meta/muse-spark-1.3-contributor",
+				name: "Muse Spark 1.3 Contributor",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: c(0.1, 0.2, 0.002),
+				contextWindow: 1_048_576,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
+			},
+			{
 				id: "meta/muse-spark-1.1",
 				name: "Muse Spark 1.1",
 				reasoning: true,
@@ -535,6 +568,18 @@ export default function (pi: ExtensionAPI) {
 				contextWindow: 256000,
 				maxTokens: 65536,
 				compat: COMPAT,
+			},
+			// --- Meituan ---
+			{
+				id: "meituan/LongCat-2.0:free",
+				name: "LongCat 2.0",
+				reasoning: true,
+				input: ["text"],
+				cost: c(0, 0, 0),
+				contextWindow: 1_048_576,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
 			},
 			// --- Sakana AI ---
 			{
@@ -729,6 +774,17 @@ export default function (pi: ExtensionAPI) {
 				compat: COMPAT,
 			},
 			// --- Alibaba Qwen ---
+			{
+				id: "Qwen/Qwen3.8-Max-0902",
+				name: "Qwen 3.8 Max 0902",
+				reasoning: true,
+				input: ["text"],
+				cost: c(2, 6, 0.25),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: THINKING,
+				compat: QWEN_COMPAT,
+			},
 			{
 				id: "Qwen/Qwen3.8-Max",
 				name: "Qwen 3.8 Max",

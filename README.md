@@ -38,6 +38,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Gemini 3.5 Flash Lite | `google/gemini-3.5-flash-lite` |
 | Gemini 3.6 Flash | `google/gemini-3.6-flash` |
 | Gemini 3.7 Flash | `google/gemini-3.7-flash` |
+| Gemini 3.8 Flash | `google/gemini-3.8-flash` |
 | GLM-5 | `zai-org/GLM-5` |
 | GLM-5.1 | `zai-org/GLM-5.1` |
 | GLM-5.2 | `zai-org/GLM-5.2` |
@@ -61,6 +62,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Kimi K2.7 Code HighSpeed | `moonshotai/Kimi-K2.7-Code-Highspeed` |
 | Kimi K3 | `moonshotai/Kimi-K3` |
 | Laguna S 2.1 | `poolside/laguna-s-2.1-free` |
+| LongCat 2.0 | `meituan/LongCat-2.0:free` |
 | MiMo V2.5 | `xiaomi/mimo-v2.5` |
 | MiMo V2.5 Pro | `xiaomi/mimo-v2.5-pro` |
 | MiniMax M2.5 | `MiniMaxAI/MiniMax-M2.5` |
@@ -69,6 +71,8 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Muse Spark 1.1 | `meta/muse-spark-1.1` |
 | Muse Spark 1.2 | `meta/muse-spark-1.2` |
 | Muse Spark 1.2 Contributor | `meta/muse-spark-1.2-contributor` |
+| Muse Spark 1.3 | `meta/muse-spark-1.3` |
+| Muse Spark 1.3 Contributor | `meta/muse-spark-1.3-contributor` |
 | Nemotron 3 Ultra | `nvidia/nemotron-3-ultra-550b-a55b` |
 | Qwen 3.6 Max Preview | `Qwen/Qwen3.6-Max-Preview` |
 | Qwen 3.6 Plus | `Qwen/Qwen3.6-Plus` |
@@ -78,6 +82,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Qwen 3.8 27B | `Qwen/Qwen3.8-27B` |
 | Qwen 3.8 Flash | `Qwen/Qwen3.8-Flash` |
 | Qwen 3.8 Max | `Qwen/Qwen3.8-Max` |
+| Qwen 3.8 Max 0902 | `Qwen/Qwen3.8-Max-0902` |
 | Step 3.5 Flash | `stepfun/Step-3.5-Flash` |
 | Step 3.7 Flash | `stepfun/Step-3.7-Flash` |
 | Tencent Hy3 | `tencent/hy3-paid` |
