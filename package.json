@@ -1,6 +1,6 @@
 {
   "name": "@iaziz786/pi-cmd-login",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "Pi extension that adds Command Code (commandcode.ai) as a model provider via its OpenAI-compatible chat completions API.",
   "keywords": ["pi-package", "extension", "command-code", "deepseek", "kimi", "glm", "qwen"],
   "type": "module",
