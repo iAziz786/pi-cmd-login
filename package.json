@@ -12,6 +12,9 @@
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*"
   },
+  "scripts": {
+    "sync:catalog": "bun run scripts/sync-catalog.ts"
+  },
   "pi": {
     "extensions": ["./index.ts"]
   }
