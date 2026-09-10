@@ -36,6 +36,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | DeepSeek V4 Flash Fast | `deepseek/deepseek-v4-flash-fast` |
 | DeepSeek V4 Flash Vision (exp) | `deepseek/deepseek-v4-flash-vision-exp` |
 | DeepSeek V4 Pro (latest) | `deepseek/deepseek-v4-pro` |
+| DeepSeek V4.1 Flash | `deepseek/deepseek-v4.1-flash` |
 | Fugu Ultra | `sakana/fugu-ultra` |
 | Gemini 3.1 Flash Lite | `google/gemini-3.1-flash-lite` |
 | Gemini 3.5 Flash | `google/gemini-3.5-flash` |
@@ -66,6 +67,7 @@ Static roster of Command Code models (canonical ids from `GET /provider/v1/model
 | Kimi K2.7 Code HighSpeed | `moonshotai/Kimi-K2.7-Code-Highspeed` |
 | Kimi K3 | `moonshotai/Kimi-K3` |
 | Laguna S 2.1 | `poolside/laguna-s-2.1-free` |
+| Ling 3.0 Flash Sante | `inclusionai/ling-3.0-flash-sante:free` |
 | LongCat 2.0 | `meituan/LongCat-2.0:free` |
 | MiMo V2.5 | `xiaomi/mimo-v2.5` |
 | MiMo V2.5 Pro | `xiaomi/mimo-v2.5-pro` |
@@ -100,8 +102,10 @@ DeepSeek V4 Flash/Pro bill at different rates depending on UTC hour:
 
 | Band | Hours (UTC) | Flash $/M in/out/cache | Pro $/M in/out/cache |
 |---|---|---|---|
-| Off-peak | 17h/day | 0.22 / 0.66 / 0.007 | 0.66 / 1.98 / 0.02 |
-| Peak | 7h/day · 01–04 & 06–10 | 0.44 / 1.32 / 0.01 | 1.32 / 3.96 / 0.04 |
+| Off-peak | 17h/day | 0.15 / 0.60 / 0.003 | 0.66 / 1.98 / 0.02 |
+| Peak | 7h/day · 01–04 & 06–10 | 0.30 / 1.20 / 0.006 | 1.32 / 3.96 / 0.04 |
+
+DeepSeek V4.1 Flash shares the V4 Flash bands.
 
 Since 2026-08-23 00:00 Beijing time, weekends (Sat/Sun, Beijing time) are charged at the off-peak rate all day; weekdays keep the peak/off-peak bands above. Calls before that date are settled under the old rules.
 

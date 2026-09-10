@@ -40,11 +40,11 @@ describe("deepseekRates", () => {
 	test("flash peak vs off-peak rates", () => {
 		const peak = deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-01T02:00:00Z"));
 		expect(peak).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].peak);
-		expect(peak).toEqual({ input: 0.44, output: 1.32, cacheRead: 0.01 });
+		expect(peak).toEqual({ input: 0.3, output: 1.2, cacheRead: 0.006 });
 
 		const offPeak = deepseekRates("deepseek/deepseek-v4-flash", new Date("2026-08-01T12:00:00Z"));
 		expect(offPeak).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].offPeak);
-		expect(offPeak).toEqual({ input: 0.22, output: 0.66, cacheRead: 0.007 });
+		expect(offPeak).toEqual({ input: 0.15, output: 0.6, cacheRead: 0.003 });
 	});
 
 	test("pro peak vs off-peak rates", () => {
@@ -105,10 +105,17 @@ describe("weekend billing (rules effective 2026-08-23 00:00 Beijing)", () => {
 });
 
 describe("deepseek-v4-flash-vision-exp pricing", () => {
-	test("shares flash peak/off-peak bands", () => {
-		expect(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"]).toEqual(
-			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"],
-		);
+	test("keeps its own peak/off-peak bands (flash got cheaper, vision-exp did not)", () => {
+		expect(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"].offPeak).toEqual({
+			input: 0.22,
+			output: 0.66,
+			cacheRead: 0.007,
+		});
+		expect(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash-vision-exp"].peak).toEqual({
+			input: 0.44,
+			output: 1.32,
+			cacheRead: 0.01,
+		});
 	});
 
 	test("weekday peak UTC hour bills peak", () => {
@@ -124,6 +131,29 @@ describe("deepseek-v4-flash-vision-exp pricing", () => {
 	});
 });
 
+describe("deepseek-v4.1-flash pricing", () => {
+	test("shares v4 flash peak/off-peak bands", () => {
+		expect(DEEPSEEK_PRICING["deepseek/deepseek-v4.1-flash"]).toEqual(
+			DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"],
+		);
+	});
+
+	test("weekday peak UTC hour bills peak", () => {
+		expect(
+			deepseekRates("deepseek/deepseek-v4.1-flash", new Date("2026-08-24T02:00:00Z")),
+		).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4.1-flash"].peak);
+		expect(
+			deepseekRates("deepseek/deepseek-v4.1-flash", new Date("2026-08-24T02:00:00Z")),
+		).toEqual({ input: 0.3, output: 1.2, cacheRead: 0.006 });
+	});
+
+	test("weekend peak UTC hour bills off-peak (new rules)", () => {
+		expect(
+			deepseekRates("deepseek/deepseek-v4.1-flash", new Date("2026-08-29T07:00:00Z")),
+		).toEqual(DEEPSEEK_PRICING["deepseek/deepseek-v4.1-flash"].offPeak);
+	});
+});
+
 describe("costFor", () => {
 	test("off-peak flash: 500k in, 100k out, 400k cacheRead", () => {
 		const cost = costFor(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].offPeak, {
@@ -132,23 +162,23 @@ describe("costFor", () => {
 			cacheRead: 400_000,
 			cacheWrite: 0,
 		});
-		expect(cost.input).toBeCloseTo(0.11, 10);
-		expect(cost.output).toBeCloseTo(0.066, 10);
-		expect(cost.cacheRead).toBeCloseTo(0.0028, 10);
+		expect(cost.input).toBeCloseTo(0.075, 10);
+		expect(cost.output).toBeCloseTo(0.06, 10);
+		expect(cost.cacheRead).toBeCloseTo(0.0012, 10);
 		expect(cost.cacheWrite).toBe(0);
-		expect(cost.total).toBeCloseTo(0.1788, 10);
+		expect(cost.total).toBeCloseTo(0.1362, 10);
 	});
 
-	test("peak flash doubles input/output but cacheRead only rounds up", () => {
+	test("peak flash: 500k in, 100k out, 400k cacheRead", () => {
 		const cost = costFor(DEEPSEEK_PRICING["deepseek/deepseek-v4-flash"].peak, {
 			input: 500_000,
 			output: 100_000,
 			cacheRead: 400_000,
 			cacheWrite: 0,
 		});
-		expect(cost.input).toBeCloseTo(0.22, 10);
-		expect(cost.output).toBeCloseTo(0.132, 10);
-		expect(cost.cacheRead).toBeCloseTo(0.004, 10);
+		expect(cost.input).toBeCloseTo(0.15, 10);
+		expect(cost.output).toBeCloseTo(0.12, 10);
+		expect(cost.cacheRead).toBeCloseTo(0.0024, 10);
 	});
 
 	test("pro off-peak: 1M in, 200k out", () => {

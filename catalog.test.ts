@@ -93,8 +93,8 @@ const indexModels = parseIndexModels(indexText);
 const deepseekPricing = parseDeepseekPricing(pricingText);
 
 describe("catalog.yaml is source of truth — pricing cannot drift", () => {
-	test("catalog.yaml exists and has 67 models", () => {
-		expect(catalog.length).toBe(67);
+	test("catalog.yaml exists and has 69 models", () => {
+		expect(catalog.length).toBe(69);
 	});
 
 	test("every catalog entry has a valid source URL", () => {
@@ -154,6 +154,9 @@ describe("catalog.yaml is source of truth — pricing cannot drift", () => {
 			"moonshotai/Kimi-K2.6": { input: 0.95, output: 4, cacheRead: 0.16 },
 			"google/gemini-3.8-flash": { input: 1.5, output: 7.5, cacheRead: 0.15 },
 			"meituan/LongCat-2.0:free": { input: 0, output: 0, cacheRead: 0 },
+			"deepseek/deepseek-v4-flash": { input: 0.15, output: 0.6, cacheRead: 0.003 },
+			"deepseek/deepseek-v4.1-flash": { input: 0.15, output: 0.6, cacheRead: 0.003 },
+			"inclusionai/ling-3.0-flash-sante:free": { input: 0, output: 0, cacheRead: 0 },
 		};
 		for (const [id, expected] of Object.entries(checks)) {
 			const cat = catalog.find((c) => c.id === id);
