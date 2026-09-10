@@ -24,8 +24,12 @@ function beijingWeekday(date: Date): number {
 
 export const DEEPSEEK_PRICING: Record<string, { offPeak: Rates; peak: Rates }> = {
 	"deepseek/deepseek-v4-flash": {
-		offPeak: { input: 0.22, output: 0.66, cacheRead: 0.007 },
-		peak: { input: 0.44, output: 1.32, cacheRead: 0.01 },
+		offPeak: { input: 0.15, output: 0.6, cacheRead: 0.003 },
+		peak: { input: 0.3, output: 1.2, cacheRead: 0.006 },
+	},
+	"deepseek/deepseek-v4.1-flash": {
+		offPeak: { input: 0.15, output: 0.6, cacheRead: 0.003 },
+		peak: { input: 0.3, output: 1.2, cacheRead: 0.006 },
 	},
 	"deepseek/deepseek-v4-flash-vision-exp": {
 		offPeak: { input: 0.22, output: 0.66, cacheRead: 0.007 },

@@ -111,8 +111,8 @@ export default function (pi: ExtensionAPI) {
 		models: [
 			// DeepSeek
 			// DeepSeek — time-of-day pricing (docs: commandcode.ai/models/deepseek-v4-{flash,pro}):
-			//   Off-peak (17h/day): flash $0.22/$0.66/$0.007, pro $0.66/$1.98/$0.02
-			//   Peak (7h/day, 01–04 & 06–10 UTC): flash $0.44/$1.32/$0.01, pro $1.32/$3.96/$0.04
+			//   Off-peak (17h/day): flash $0.15/$0.60/$0.003, pro $0.66/$1.98/$0.02
+			//   Peak (7h/day, 01–04 & 06–10 UTC): flash $0.30/$1.20/$0.006, pro $1.32/$3.96/$0.04
 			// pi supports only flat rates, so off-peak (the page headline rate) is used;
 			// during peak hours actual cost runs ~2x. Pro page also had a −75% deal
 			// (ends 2026-08-16) baked into these numbers.
@@ -121,7 +121,7 @@ export default function (pi: ExtensionAPI) {
 				name: "DeepSeek V4 Flash",
 				reasoning: true,
 				input: ["text"],
-				cost: c(0.22, 0.66, 0.007),
+				cost: c(0.15, 0.60, 0.003),
 				contextWindow: 1_000_000,
 				maxTokens: 131072,
 				thinkingLevelMap: DEEPSEEK_THINKING,
@@ -147,6 +147,20 @@ export default function (pi: ExtensionAPI) {
 					"image"
 				],
 				cost: c(0.22, 0.66, 0.007),
+				contextWindow: 1_000_000,
+				maxTokens: 131072,
+				thinkingLevelMap: DEEPSEEK_THINKING,
+				compat: DEEPSEEK_COMPAT,
+			},
+			{
+				id: "deepseek/deepseek-v4.1-flash",
+				name: "DeepSeek V4.1 Flash",
+				reasoning: true,
+				input: [
+					"text",
+					"image"
+				],
+				cost: c(0.15, 0.60, 0.003),
 				contextWindow: 1_000_000,
 				maxTokens: 131072,
 				thinkingLevelMap: DEEPSEEK_THINKING,
@@ -321,6 +335,18 @@ export default function (pi: ExtensionAPI) {
 				maxTokens: 65536,
 				thinkingLevelMap: THINKING,
 				compat: GEMINI_COMPAT,
+			},
+			// --- InclusionAI ---
+			{
+				id: "inclusionai/ling-3.0-flash-sante:free",
+				name: "Ling 3.0 Flash Sante",
+				reasoning: true,
+				input: ["text"],
+				cost: c(0, 0, 0),
+				contextWindow: 262144,
+				maxTokens: 65536,
+				thinkingLevelMap: THINKING,
+				compat: REASONING_COMPAT,
 			},
 			// --- OpenAI GPT ---
 			{

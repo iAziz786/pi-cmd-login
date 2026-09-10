@@ -7,15 +7,27 @@ models:
   - id: deepseek/deepseek-v4-flash
     name: "DeepSeek V4 Flash"
     cost:
-      input: 0.22
-      output: 0.66
-      cacheRead: 0.007
+      input: 0.15
+      output: 0.6
+      cacheRead: 0.003
     peakCost:
-      input: 0.44
-      output: 1.32
-      cacheRead: 0.01
+      input: 0.3
+      output: 1.2
+      cacheRead: 0.006
     contextWindow: 1000000
     source: https://commandcode.ai/models/deepseek-v4-flash
+  - id: deepseek/deepseek-v4.1-flash
+    name: "DeepSeek V4.1 Flash"
+    cost:
+      input: 0.15
+      output: 0.6
+      cacheRead: 0.003
+    peakCost:
+      input: 0.3
+      output: 1.2
+      cacheRead: 0.006
+    contextWindow: 1000000
+    source: https://commandcode.ai/models/deepseek-v4-1-flash
   - id: deepseek/deepseek-v4-pro
     name: "DeepSeek V4 Pro"
     cost:
@@ -160,6 +172,14 @@ models:
       cacheRead: 0.03
     contextWindow: 1000000
     source: https://commandcode.ai/models/gemini-3-1-flash-lite
+  - id: inclusionai/ling-3.0-flash-sante:free
+    name: "Ling 3.0 Flash Sante"
+    cost:
+      input: 0
+      output: 0
+      cacheRead: 0
+    contextWindow: 262144
+    source: https://commandcode.ai/models/ling-3-0-flash-sante-free
   - id: gpt-5.6-sol
     name: "GPT-5.6 Sol"
     cost:
