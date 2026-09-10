@@ -24,5 +24,6 @@ The `index.ts` roster must match the live Command Code catalog. Run this wheneve
 ## Release
 
 - Land changes through a PR; branch protection requires it. Squash-merge and delete the branch.
+- Bump `package.json` `version` to the release version first, via a `chore(release)` PR (e.g. `chore(release): bump to 0.4.11`). The `publish` workflow fails the release if the tag does not equal `v<package.json version>` — never tag a version below the current one.
 - Create the tag with a message: `git tag -s vX.Y.Z -m "..."`. A bare `git tag` opens an editor (gpg signing is on) and hangs.
-- Push the tag, then `gh release create` with notes from the PR body.
+- Push the tag (`publish` runs `bun test` + `npm publish`), then `gh release create` with notes from the PR body.
